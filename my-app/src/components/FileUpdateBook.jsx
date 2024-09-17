@@ -1,115 +1,114 @@
-import React, { useState } from 'react';
-import { TextField, Button, Grid, MenuItem, Container, Typography } from '@mui/material';
-
-// קטגוריות מדוגמא
-const categories = [
-  'Children',
-  'Youth',
-  'Adult',
-  'Psychology'
-];
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { TextField, Button, Container, Typography } from '@mui/material';
+import { fetchBookById, updateBook } from '../states/bookSlice'; // תיקון: הקובץ `bookSlice` לא נמצא במקום הנכון
+import { useParams, useNavigate } from 'react-router-dom';
 
 const FileUpdateBook = () => {
-  const [bookDetails, setBookDetails] = useState({
+  const { id } = useParams();
+    //const [isLoading, setIsLoading] = useState(true);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const book = useSelector((state) => state.books.book);
+  const [formData, setFormData] = useState({
     name: '',
     price: '',
     quantity: '',
     author: '',
-    category: ''
+    category: '',
   });
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setBookDetails({
-      ...bookDetails,
-      [name]: value
+  useEffect(() => {
+    dispatch(fetchBookById(id));
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (book) {
+      setFormData({
+        name: book.name,
+        price: book.price,
+        quantity: book.quantity,
+        author: book.author,
+        category: book.category,
+      });
+    }
+  }, [book]);
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // כאן תבוא הלוגיקה של שליחת הנתונים לשרת
-    console.log('Book details updated:', bookDetails);
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    dispatch(updateBook({ id, bookDetails: formData }))
+      .then(() => {
+        alert('Book updated successfully');
+        navigate('/');
+      })
+      .catch(() => {
+        alert('Failed to update book');
+      });
   };
 
   return (
     <Container maxWidth="sm">
-      <Typography variant="h4" gutterBottom>
-        Update Book
-      </Typography>
+      <Typography variant="h4" gutterBottom>Update Book</Typography>
       <form onSubmit={handleSubmit}>
-        <Grid container spacing={3}>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Book Name"
-              name="name"
-              variant="outlined"
-              value={bookDetails.name}
-              onChange={handleChange}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Price"
-              name="price"
-              variant="outlined"
-              type="number"
-              inputProps={{ step: "0.01" }}
-              value={bookDetails.price}
-              onChange={handleChange}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Quantity"
-              name="quantity"
-              variant="outlined"
-              type="number"
-              value={bookDetails.quantity}
-              onChange={handleChange}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              label="Author"
-              name="author"
-              variant="outlined"
-              value={bookDetails.author}
-              onChange={handleChange}
-              required
-            />
-          </Grid>
-          <Grid item xs={12}>
-            <TextField
-              fullWidth
-              select
-              label="Category"
-              name="category"
-              variant="outlined"
-              value={bookDetails.category}
-              onChange={handleChange}
-              required
-            >
-              {categories.map((category) => (
-                <MenuItem key={category} value={category}>
-                  {category}
-                </MenuItem>
-              ))}
-            </TextField>
-          </Grid>
-          <Grid item xs={12}>
-            <Button type="submit" variant="contained" color="primary" fullWidth>
-              Update Book
-            </Button>
-          </Grid>
-        </Grid>
+        <TextField
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Price"
+          name="price"
+          type="number"
+          value={formData.price}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Quantity"
+          name="quantity"
+          type="number"
+          value={formData.quantity}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Author"
+          name="author"
+          value={formData.author}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <TextField
+          label="Category"
+          name="category"
+          value={formData.category}
+          onChange={handleChange}
+          fullWidth
+          margin="normal"
+          required
+        />
+        <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px' }}>
+          Update Book
+        </Button>
       </form>
     </Container>
   );

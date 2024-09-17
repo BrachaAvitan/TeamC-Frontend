@@ -1,24 +1,31 @@
-// Import createBrowserRouter from React Router DOM to configure routing
-import { createBrowserRouter } from "react-router-dom";
-import HomePage from "./components/HomePage";
+import { createBrowserRouter } from 'react-router-dom';
+import HomePage from './components/HomePage';
+import FileUpdateBook from './components/FileUpdateBook';
+import FileCreateBook from './components/FileCreateBook';
+import ListBooks from './components/ListBooks';
+import NotFound from './components/NotFound';
 
-// Define and export the application's router configuration
 const router = createBrowserRouter([
-    {
-        path: "/",
-        children: [
-          {
-            // Default route for the root path, renders HomePage component
-            index: true,
-            element: <HomePage />,
-          },
-          {
-            // Future dynamic route for individual books, using the book name as a parameter
-            // path: ":name",
-            // element: <Book />,
-          },
-        ],
-    },
+  {
+    path: '/',
+    element: <HomePage />,
+  },
+  {
+    path: 'list-books', 
+    element: <ListBooks />,
+  },
+  {
+    path: 'update-book/:id',
+    element: <FileUpdateBook />,
+  },
+  {
+    path: 'create-book',
+    element: <FileCreateBook />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
+  },
 ]);
 
 export default router;

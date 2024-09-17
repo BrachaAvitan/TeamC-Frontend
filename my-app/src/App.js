@@ -9,10 +9,7 @@ import router from './router'; // Import the router configuration
  */
 function App() {
   return (
-    <>
-      {/* Provide the router configuration to the application */}
-      <RouterProvider router={router} />
-    </>
+    <RouterProvider router={router} />
   );
 }
 

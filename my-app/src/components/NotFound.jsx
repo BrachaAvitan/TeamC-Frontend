@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import '../css/popup_button_shippingPolicy_notFound.css';
 
 /**
  * NotFound component displays a 404 error message when a page is not found.
@@ -15,7 +14,7 @@ const NotFound = () => {
 
   return (
     <div>
-      <h1 id="movingTitle" className='success-popup'>NOT FOUND 404</h1>
+      <h1 id="movingTitle" >NOT FOUND 404</h1>
 
       <img  src="../assets/not found.jpg" alt="NOT FOUND 404" />
       <br />  <br />
